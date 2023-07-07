@@ -1,7 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import connectDB from "./config/db.js";
-
+import { customErrorhandler, invalidPathHandler } from "./middleware/errorHandler.js";
 //Routes
 import userRoute from "./routes/userRoute.js"
 
@@ -15,6 +15,8 @@ app.get('/', (req, res) => {
 })
 
 app.use('/api/users', userRoute)
+app.use(customErrorhandler)
+app.use(invalidPathHandler)
 const PORT = process.env.PORT || 5000
 
 app.listen(PORT, () => console.log("Server is running on " + PORT + " Baby...."))
