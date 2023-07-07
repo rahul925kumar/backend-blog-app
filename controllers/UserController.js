@@ -52,3 +52,26 @@ export const loginUser = async (req, res, next) => {
     next(error)
   }
 }
+
+export const userProfile = async (req, res, next) => {
+  try {
+    console.log('req.user: ', req.user);
+    let user = await User.findById(req.user._id);
+    console.log('user: ', user);
+    return user
+    if (user) {
+      return res.status(201).json({
+        _id: user?._id,
+        avatar: user.avatar,
+        name: user.name,
+        email: user.email,
+        password: user.password,
+        verified: user.verified,
+        admin: user.admin,
+      });
+    }
+    throw new Error('data not found')
+  } catch (error) {
+    next(error)
+  }
+}
