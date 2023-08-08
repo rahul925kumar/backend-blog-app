@@ -14,7 +14,7 @@ app.get('/', (req, res) => {
   res.send("Server is running Baby....")
 })
 
-app.use('/api/users', userRoute)
+app.use('/api/user', userRoute)
 app.use(customErrorhandler)
 app.use(invalidPathHandler)
 const PORT = process.env.PORT || 5000

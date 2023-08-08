@@ -72,3 +72,8 @@ export const userProfile = async (req, res, next) => {
     next(error)
   }
 }
+
+export const updateProfile = async (req, res, next) => {
+  console.log('req: ====>>>>>>>', req.user._id);
+
+}
