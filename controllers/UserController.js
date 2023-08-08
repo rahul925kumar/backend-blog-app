@@ -20,7 +20,7 @@ export const registerUser = async (req, res, next) => {
       password: user.password,
       verified: user.verified,
       admin: user.admin,
-      token: await user.generateJWT()
+      token: await user.generateJWT(user?._id)
     });
   } catch (error) {
     next(error)
@@ -43,7 +43,7 @@ export const loginUser = async (req, res, next) => {
         password: user.password,
         verified: user.verified,
         admin: user.admin,
-        token: await user.generateJWT()
+        token: await user.generateJWT(user?._id)
       });
     } else {
       throw new Error("wrong password");
@@ -55,10 +55,7 @@ export const loginUser = async (req, res, next) => {
 
 export const userProfile = async (req, res, next) => {
   try {
-    console.log('req.user: ', req.user);
     let user = await User.findById(req.user._id);
-    console.log('user: ', user);
-    return user
     if (user) {
       return res.status(201).json({
         _id: user?._id,

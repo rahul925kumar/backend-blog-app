@@ -24,8 +24,16 @@ UserSchema.pre("save", async function (next) {
 
 // Method for token
 
-UserSchema.methods.generateJWT = async () => {
-  return await sign({ id: this?._id }, process.env.JWT_SECRET, { expiresIn: '30d' })
+UserSchema.methods.generateJWT = async (id) => {
+  console.log('id: ', id);
+  let jwtSecretKey = process.env.JWT_SECRET_KEY;
+  let data = {
+    time: Date(),
+    id: id,
+  }
+
+  const token = jwt.sign(data, jwtSecretKey, { expiresIn: '30d' });
+  return token
 }
 
 //Compare password
