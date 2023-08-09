@@ -103,9 +103,13 @@ export const updateProfilePicture = async (req, res, next) => {
         return next(new Error("An error occurred while uploading an image"));
       } else {
         if (req.file) {
-          const updatedUser = await User.findByIdAndUpdate(req.user._id, {
-            avatar: req.file.filename
-          }, { new: true })
+          let filename;
+          const updatedUser = await User.findById(req.user._id)
+          if (filename) {
+            fileRemover(filename)
+          }
+          updatedUser.avatar = req.file.filename;
+          await updatedUser.save();
           return res.json(updatedUser)
         }
         else {
