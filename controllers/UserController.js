@@ -95,12 +95,12 @@ export const updateProfile = async (req, res, next) => {
   }
 }
 
-export const updateProfilePicture = async (req, res) => {
+export const updateProfilePicture = async (req, res, next) => {
   try {
     const upload = uploadPicture.single("avatar")
     upload(req, res, async function (err) {
       if (err) {
-        throw new Error("An error occur while upload an image")
+        return next(new Error("An error occurred while uploading an image"));
       } else {
         if (req.file) {
           const updatedUser = await User.findByIdAndUpdate(req.user._id, {
@@ -115,19 +115,12 @@ export const updateProfilePicture = async (req, res) => {
           updatedUser.avatar = "";
           await updatedUser.save();
           fileRemover(filename);
-          res.json({
-            _id: updatedUser._id,
-            avatar: updatedUser.avatar,
-            name: updatedUser.name,
-            email: updatedUser.email,
-            verified: updatedUser.verified,
-            admin: updatedUser.admin,
-            token: await updatedUser.generateJWT(),
-          });
+          res.json(updatedUser);
         }
       }
     })
   } catch (error) {
+    console.log('error: ', error);
     next(error)
   }
 }

@@ -1,14 +1,23 @@
 import multer from "multer";
 import path from 'path';
+import { fileURLToPath } from 'url';
+
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const storage = multer.diskStorage({
-  destination: (req, file, callback) => {
-    callback(null, path.join(__dirname, '../uploads'))
+  destination: (req, file, cb) => {
+    console.log('file: ', file);
+    cb(null, path.join(__dirname, '../uploads'));
   },
   filename: (req, file, cb) => {
-    return (null, `${Date.now()} - ${file.originalname}`)
+    const uniquePrefix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, uniquePrefix + '-' + file.originalname);
   }
-})
-const uploadPicture = multer({
+});
+
+export const uploadPicture = multer({
   storage: storage,
   limits: {
     fileSize: 1 * 1000000
@@ -16,9 +25,8 @@ const uploadPicture = multer({
   fileFilter: function (req, file, cb) {
     let ext = path.extname(file.originalname)
     if (ext !== '.png' && ext !== '.jpg' && ext !== '.jpeg') {
-      return cb(new Error("only images are allowes"))
+      cb(new Error("only images are allowed"), false)
     }
+    cb(null, true)
   }
 })
-
-export { uploadPicture }
