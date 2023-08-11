@@ -13,6 +13,7 @@ export const registerUser = async (req, res, next) => {
     }
 
     user = await User.create({ name, email, password });
+    console.log('user: ', user);
 
     return res.status(201).json({
       _id: user?._id,
